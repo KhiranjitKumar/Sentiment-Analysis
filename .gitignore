@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pth
+logs/
+data/
+sentiment_env/
