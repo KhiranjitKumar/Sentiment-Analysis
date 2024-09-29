@@ -7,27 +7,27 @@ from torch.utils.data import DataLoader, TensorDataset
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def evaluate_on_test():
+def evaluate_on_train():
     model = BERTBiLSTMClassifier().to(device)
     model.load_state_dict(torch.load(r'K:\sentiment-classification\logs\best_model5.pth'))
     model.eval()
     
     data_dir = r'K:\sentiment-classification\data'
     pos_reviews, neg_reviews = load_data(data_dir)
-    _, _, test_data = split_and_tokenize_data(pos_reviews, neg_reviews)
+    train_data, _, _ = split_and_tokenize_data(pos_reviews, neg_reviews)  # Modify this if needed
     
-    test_input_ids = test_data[0]['input_ids']
-    test_attention_masks = test_data[0]['attention_mask']
-    test_labels = torch.tensor(test_data[1])
+    train_input_ids = train_data[0]['input_ids']
+    train_attention_masks = train_data[0]['attention_mask']
+    train_labels = torch.tensor(train_data[1])
     
-    test_dataset = TensorDataset(test_input_ids, test_attention_masks, test_labels)
-    test_dataloader = DataLoader(test_dataset, batch_size=32)
-    
+    train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels)
+    train_dataloader = DataLoader(train_dataset, batch_size=32)
+
     all_preds = []
     all_labels = []
     
     with torch.no_grad():
-        for batch in test_dataloader:
+        for batch in train_dataloader:
             input_ids, attention_masks, labels = [t.to(device) for t in batch]
             outputs = model(input_ids, attention_masks)
             _, preds = torch.max(outputs, dim=1)
@@ -51,4 +51,4 @@ def evaluate_on_test():
     print(f'F1 Score: {f1:.4f}')
 
 if __name__ == '__main__':
-    evaluate_on_test()
+    evaluate_on_train()

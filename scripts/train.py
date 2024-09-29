@@ -63,9 +63,9 @@ def train_model():
     criterion = torch.nn.CrossEntropyLoss()
 
     best_val_loss = float('inf')
-    best_model_path = r'K:\sentiment-classification\logs\best_model.pth'
+    best_model_path = r'K:\sentiment-classification\logs\best_model5.pth'
 
-    for epoch in range(3):
+    for epoch in range(5):
         model.train()
         total_train_loss = 0
         print(f"Starting epoch {epoch+1}")
